@@ -27,7 +27,7 @@ uint32_t replaced_notify_post(const char *name) {
 
 	if (nil != filter){
 			
-			NSString *pSTRING=[[NSString alloc] initWithCString:name];
+			NSString *pSTRING=[[NSString alloc] initWithCString:name encoding:NSUTF8StringEncoding];
 			NSRange range=[pSTRING rangeOfString:filter options:(NSCaseInsensitiveSearch)];
 			[pSTRING release];
 			if (range.location!=NSNotFound){
@@ -141,7 +141,7 @@ CFNotificationCenterRef center,
 int res=orig_sqlite3_prepare_v2(db,zSql,nByte,ppStmt,pzTail);
 if (hookSqlite){
 	if (nil != filter){
-		NSString *sqString=[[NSString alloc] initWithCString:zSql ];
+		NSString *sqString=[[NSString alloc] initWithCString:zSql encoding:NSUTF8StringEncoding];
 		NSRange range=[sqString rangeOfString:filter];
 		[sqString release];
 			if (range.location!=NSNotFound){
@@ -239,14 +239,14 @@ return result;
 }
 -(void)sendMessageAndReceiveReplyName:(id)name userInfo:(id)info toTarget:(id)target selector:(SEL)selector context:(void*)context{
 	if (hookCPDistMess  && ((filter && [name rangeOfString:filter].location!=NSNotFound) || !filter)){
-		NSLog(@"LibNotifyWatch: %@ sendMessageAndReceiveReplyName:%@ userInfo:%@ toTarget:%@ selector:%: context",self,name,info,target,selector);
+		NSLog(@"LibNotifyWatch: %@ sendMessageAndReceiveReplyName:%@ userInfo:%@ toTarget:%@ selector:%@: context",self,name,info,target,NSStringFromSelector(selector));
 	}
 %orig;
 }
 -(BOOL)_sendMessage:(id)message userInfo:(id)info receiveReply:(id*)reply error:(id*)error toTarget:(id)target selector:(SEL)selector context:(void*)context{
 BOOL result=%orig;
 	if (hookCPDistMess && ((filter && [message rangeOfString:filter].location!=NSNotFound) || !filter)){
-		NSLog(@"LibNotifyWatch: %@ _sendMessage:%@ userInfo:%@ receiveReply:na error:na toTarget:%@ selector:%: context",self,message,info,target,selector);
+		NSLog(@"LibNotifyWatch: %@ _sendMessage:%@ userInfo:%@ receiveReply:na error:na toTarget:%@ selector:%@: context",self,message,info,target,NSStringFromSelector(selector));
 	}
 return result;
 }

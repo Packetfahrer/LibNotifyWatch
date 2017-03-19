@@ -22,7 +22,7 @@
 - (id) initForContentSize:(CGSize)size ;
 
 - (id) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (int) tableView:(UITableView *)tableView numberOfRowsInSection:(int)section;
+- (int) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
 - (void) dealloc;
 - (id) navigationTitle;
 - (id) view;
@@ -97,11 +97,11 @@ return self;
     return 1;
 }
 
-- (id) tableView:(UITableView *)tableView titleForHeaderInSection:(int)section {
+- (id) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     return nil;
 }
 
-- (int) tableView:(UITableView *)tableView numberOfRowsInSection:(int)section {
+- (int) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
 	return self.functions.count;
 	
@@ -110,22 +110,25 @@ return self;
 - (id) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FunctionCell"];
     if (!cell) {
-        cell = [[[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, 100, 100) reuseIdentifier:@"FunctionCell"] autorelease];
+        // cell = [[[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, 100, 100) reuseIdentifier:@"FunctionCell"] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"FunctionCell"] autorelease];
+        cell.frame = CGRectMake(0,0,100,100);
     }
 		NSAutoreleasePool *p=[[NSAutoreleasePool alloc] init];
     
 	NSString *function=[self.functions objectAtIndex:indexPath.row];
-    cell.text = [function valueForKey:@"functionName"];
-    cell.hidesAccessoryWhenEditing = NO;
+    cell.textLabel.text = [function valueForKey:@"functionName"];
+    // cell.hidesAccessoryWhenEditing = NO;
 
 	
 	if ([[function valueForKey:@"Enabled"] boolValue]==1){
-	[cell setImage:[UIImage imageWithContentsOfFile: [[NSBundle bundleWithIdentifier:@"libnotify"] pathForResource:@"BlueCheck" ofType:@"png"] ] ];
+	// [cell setImage:[UIImage imageWithContentsOfFile: [[NSBundle bundleWithIdentifier:@"libnotify"] pathForResource:@"BlueCheck" ofType:@"png"] ] ];
+  cell.imageView.image = [UIImage imageWithContentsOfFile: [[NSBundle bundleWithIdentifier:@"libnotify"] pathForResource:@"BlueCheck" ofType:@"png"]];
 	
 	}
 	else{
-	[cell setImage:[UIImage imageWithContentsOfFile: [[NSBundle bundleWithIdentifier:@"libnotify"] pathForResource:@"WhiteSpace" ofType:@"png"] ] ];
-	
+	// [cell setImage:[UIImage imageWithContentsOfFile: [[NSBundle bundleWithIdentifier:@"libnotify"] pathForResource:@"WhiteSpace" ofType:@"png"] ] ];
+	cell.imageView.image = [UIImage imageWithContentsOfFile: [[NSBundle bundleWithIdentifier:@"libnotify"] pathForResource:@"WhiteSpace" ofType:@"png"]];
 	}
 	
 	[p drain];
@@ -135,20 +138,23 @@ return self;
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 
-	[cell setSelectedTextColor:[UIColor whiteColor]];
+	// [cell setSelectedTextColor:[UIColor whiteColor]];
+  // cell.textLabel.textColor = [UIColor whiteColor];
 	
 	if ([[[self.functions objectAtIndex:indexPath.row] valueForKey:@"Enabled"] boolValue]==0){
 	[[self.functions objectAtIndex:indexPath.row] setValue:[NSNumber numberWithBool:1] forKey:@"Enabled"];
 	[self.dict setObject:self.functions forKey:@"functions"];
 	[self.dict writeToFile:self.dictPath atomically:YES];
-	[cell setImage:[UIImage imageWithContentsOfFile: [[NSBundle bundleWithIdentifier:@"libnotify"] pathForResource:@"BlueCheck" ofType:@"png"] ] ];
+	// [cell setImage:[UIImage imageWithContentsOfFile: [[NSBundle bundleWithIdentifier:@"libnotify"] pathForResource:@"BlueCheck" ofType:@"png"] ] ];
+  cell.imageView.image = [UIImage imageWithContentsOfFile: [[NSBundle bundleWithIdentifier:@"libnotify"] pathForResource:@"BlueCheck" ofType:@"png"]];
 	}
 	
 	else{
 	[[self.functions objectAtIndex:indexPath.row] setValue:[NSNumber numberWithBool:0] forKey:@"Enabled"];
 	[self.dict setObject:self.functions forKey:@"functions"];
 	[self.dict writeToFile:self.dictPath atomically:YES];
-	[cell setImage:[UIImage imageWithContentsOfFile: [[NSBundle bundleWithIdentifier:@"libnotify"] pathForResource:@"WhiteSpace" ofType:@"png"] ] ];
+	// [cell setImage:[UIImage imageWithContentsOfFile: [[NSBundle bundleWithIdentifier:@"libnotify"] pathForResource:@"WhiteSpace" ofType:@"png"] ] ];
+  cell.imageView.image = [UIImage imageWithContentsOfFile: [[NSBundle bundleWithIdentifier:@"libnotify"] pathForResource:@"WhiteSpace" ofType:@"png"]];
 	}
 
 	[tableView deselectRowAtIndexPath:(NSIndexPath *)indexPath animated:YES];

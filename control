@@ -1,0 +1,9 @@
+Package: com.fidele007.libnotifywatch
+Name: LibNotifyWatch
+Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: The watcher.
+Maintainer: fidele007 <kforcefidele@yahoo.com>
+Author: fidele007 <kforcefidele@yahoo.com>
+Section: Tweaks
